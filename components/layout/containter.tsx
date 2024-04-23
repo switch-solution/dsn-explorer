@@ -20,7 +20,7 @@ export const ContainerBreadCrumb = ({ children }: { children: React.ReactNode })
 }
 
 
-export const ContainerCombobox = ({ children }: { children: React.ReactNode }) => {
+export const ContainerExport = ({ children }: { children: React.ReactNode }) => {
     return (
         <div className="gap-4  px-4">
             {children}

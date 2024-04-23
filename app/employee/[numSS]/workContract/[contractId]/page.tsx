@@ -1,4 +1,4 @@
-import { Establishment } from "@/components/establishment";
+import { Container, ContainerBreadCrumb } from "@/components/layout/containter"
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -7,11 +7,9 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import Link from "next/link";
-import { Container, ContainerBreadCrumb } from "@/components/layout/containter";
-
-export default function Page({ params }: { params: { nic: string } }) {
-
+import WorkContract from "@/components/workContract"
+import Link from "next/link"
+export default function Page({ params }: { params: { numSS: string, contractId: string } }) {
     return (
         <Container>
             <ContainerBreadCrumb>
@@ -22,17 +20,21 @@ export default function Page({ params }: { params: { nic: string } }) {
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <Link href="/establishment">Etablissements</Link>
+                            <BreadcrumbLink href="/employee">Salariés</BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <Link href={`/establishment/${params.nic}`}>{params.nic}</Link>
+                            <Link href={`/employee/${params.numSS}`}>{params.numSS}</Link>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <Link href={`/employee/${params.numSS}/workContract/${params.contractId}`}>{params.contractId}</Link>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                     </BreadcrumbList>
                 </Breadcrumb>
             </ContainerBreadCrumb>
-            <Establishment query={params.nic} />
+            <WorkContract numSS={params.numSS} contractId={params.contractId} />
         </Container>
     )
 

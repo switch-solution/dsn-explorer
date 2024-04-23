@@ -15,6 +15,13 @@ export type EstablishmentObject = {
     date: string
 }
 
+export type Data = {
+    id: string;
+    value: string;
+    label: string;
+    field: string;
+}
+
 
 export type EmployeeObject = {
     numSS: string,
@@ -139,4 +146,34 @@ export type PayroolObject = {
     datePayTypement: string,
     contributedrate: string,
     increaseRate: string
+}
+
+
+export type MutualObject = {
+    contractId?: string,
+    organisme?: string,
+    delegate?: string,
+    covererd?: string,
+    techId?: string,
+    date: string
+}
+
+export type BonusObject = {
+    siren: string,
+    date: string
+    employeeId: string,
+    numSS: string,
+    typeBonus: string,
+    amountBonus: string,
+    dateStartBonus: string,
+    dateEndBonus: string,
+    contractIdBonus: string,
+    datePaymentBonus: string
+}
+
+export type RateAtObject = {
+    idWorkAccidentRisk: string,
+    rateAt: string,
+    nic: string,
+
 }

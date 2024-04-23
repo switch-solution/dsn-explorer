@@ -1,4 +1,6 @@
 "use client"
+import { useContext } from "react";
+import { DsnContext } from "@/src/context/dsn.context";
 import { ThemeToggle } from "@/src/theme/ThemeToggle";
 import {
     Tooltip,
@@ -21,9 +23,13 @@ import {
     User,
 
 } from "lucide-react"
-import { useDsnStore } from "@/src/store/dsn.store";
 export default function NavBar() {
-    const { dsn } = useDsnStore()
+    const dsnData = []
+    const context = useContext(DsnContext);
+    if (context !== null) {
+        const { dsn } = context;
+        dsnData.push(...dsn)
+    }
     return (
         <>
             <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
@@ -71,8 +77,8 @@ export default function NavBar() {
                                     href={`/data`}
                                     className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
                                 >
-                                    {dsn.length}
-                                    <span className="sr-only font-bold">{dsn.length}</span>
+                                    {dsnData.length}
+                                    <span className="sr-only font-bold">{dsnData.length}</span>
                                 </Link>
                             </TooltipTrigger>
                             <TooltipContent side="right">Nombre de DSN</TooltipContent>
@@ -145,6 +151,9 @@ export default function NavBar() {
                 </SheetContent>
             </Sheet>
         </>
+
+
+
     )
 
 }

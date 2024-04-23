@@ -944,6 +944,18 @@ export const extractionsList: extractions = [
         dsnStructure: 'S21.G00.40.039'
     },
     {
+        collection: 'RateAt',
+        field: 'idWorkAccidentRisk',
+        name: 'Code risque accident du travail',
+        dsnStructure: 'S21.G00.40.040'
+    },
+    {
+        collection: 'RateAt',
+        field: 'rateAt',
+        name: 'Taux de cotisation accident du travail',
+        dsnStructure: 'S21.G00.40.043'
+    },
+    {
         collection: 'WorkContract',
         field: 'idWorkAccidentRisk',
         name: 'Code risque accident du travail',
@@ -1699,6 +1711,12 @@ l’hypothèse d’un poste à temps complet`,
         field: 'increaseRate',
         name: `Taux de majoration ex-apprenti/ex-élève`,
         dsnStructure: 'S21.G00.51.020'
+    },
+    {
+        collection: 'Bonus',
+        field: 'numSS',
+        name: `numéro de sécurité sociale`,
+        dsnStructure: 'S21.G00.30.001'
     },
     {
         collection: 'Bonus',

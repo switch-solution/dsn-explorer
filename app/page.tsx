@@ -1,4 +1,6 @@
 "use client";
+import { useContext } from "react";
+import { DsnContext } from "@/src/context/dsn.context";
 import UploadFileDsn from "@/components/upload";
 import { CardWithContent } from "@/components/layout/card";
 import { Container, ContainerCard, ContainerBreadCrumb } from "@/components/layout/containter";
@@ -10,23 +12,29 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { useDsnStore } from "@/src/store/dsn.store";
-export default function Home() {
-  const { dsn } = useDsnStore()
+export default function Page() {
+  const context = useContext(DsnContext);
+  let dsnData = []
+  if (context !== null) {
+    const { dsn } = context;
+    dsnData = [...dsn]
+
+  }
+
   return (
     <Container>
       <ContainerBreadCrumb>
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Upload fichier DSN</BreadcrumbLink>
+              <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
           </BreadcrumbList>
         </Breadcrumb>
       </ContainerBreadCrumb>
       <ContainerCard>
-        <CardWithContent props={{ cardTitle: 'Upload fichier DSN', cardDescription: 'Cette utilitaire fonctionne uniquement en local. Vos données ne sont pas envoyées sur le serveur.', cardFooter: `Actuellement l\'application contient ${dsn.length}` }}>
+        <CardWithContent props={{ cardTitle: 'Upload fichier DSN', cardDescription: 'Cette utilitaire fonctionne uniquement en local. Vos données ne sont pas envoyées sur le serveur. Pour des raisons de perfomances vous ne pouvez pas charger plus de 20 fichiers', cardFooter: `Actuellement l\'application contient ${dsnData.length}` }}>
           <UploadFileDsn />
         </CardWithContent>
       </ContainerCard>

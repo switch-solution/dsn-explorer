@@ -1,5 +1,5 @@
 import { extractionsList } from "@/src/extraction/extraction"
-import { EstablishmentObject, EmployeeObject, WorkContractObject, PayroolObject } from "@/src/type/type"
+import { EstablishmentObject, EmployeeObject, WorkContractObject, PayroolObject, MutualObject, BonusObject, RateAtObject } from "@/src/type/type"
 export class DsnParser {
     dsnRows: { id: string, value: string }[] = []
     constructor(dsnRows: { id: string, value: string }[]) {
@@ -54,6 +54,38 @@ export class DsnParser {
         const establishment = this.makeDynamicObject<EstablishmentObject>(datas)
 
         return establishment
+    }
+
+    dsnStructure(collection: string) {
+        const dsnId = extractionsList.filter(extraction => extraction.collection === collection)
+        return dsnId
+    }
+
+    get mutual(): MutualObject[] {
+        const datas = this.filterByStructureDsn('Mutual')
+        const mutual = this.makeDynamicObject<MutualObject>(datas)
+        //Mutual start S21.G00.15.001
+        //Mutual end 'S21.G00.15.005
+        const mutualList = []
+        const mutualRows = []
+        const mutuals = []
+        let mutualId = ''
+        for (const data of datas) {
+            if (data.id === 'S21.G00.15.001') {
+                mutualList.push(data.value)
+                mutualId = data.value
+            }
+            mutualRows.push({
+                ...data,
+                mutualId
+            })
+
+        }
+        for (const mutual of mutualList) {
+            const mutua = mutualRows.filter(dsnRow => dsnRow.mutualId === mutual)
+            mutuals.push(this.makeDynamicObject<MutualObject>(mutua))
+        }
+        return mutuals
     }
 
     get employees(): EmployeeObject[] {
@@ -152,6 +184,78 @@ export class DsnParser {
     }
 
 
+    get rateAt() {
+        const establishment = this.establishment
+        const datas = this.filterByStructureDsn('RateAt')
+        const rateAtList = []
+        const rateAtRows = []
+        const rateAts = []
+        let rateAt = ''
+        for (const data of datas) {
+            if (data.id === 'S21.G00.40.040') {
+                rateAt = data.value
+                rateAtList.push(rateAt)
+            }
+            rateAtRows.push({
+                rateAt,
+                ...data
+            })
+        }
+        for (const rateAt of rateAtList) {
+            const rate = rateAtRows.filter(dsnRow => dsnRow.rateAt === rateAt)
+            rateAts.push(this.makeDynamicObject<RateAtObject>(rate))
+        }
+        const rateAtSet = new Set()
+        const rateAtListSet = []
+        for (const rateAt of rateAts) {
+            if (!rateAtSet.has(rateAt.idWorkAccidentRisk)) {
+                rateAtSet.add(rateAt.idWorkAccidentRisk)
+                rateAtListSet.push(rateAt)
+            }
+        }
+
+        //Add nic
+
+        for (const rateAt of rateAtListSet) {
+            rateAt.nic = establishment.nic
+        }
+
+
+        return rateAtListSet
+
+    }
+
+
+    get bonus(): BonusObject[] {
+        const datas = this.filterByStructureDsn('Bonus')
+        //Employee start S21.G00.30.001
+        //Employee end 'S21.G00.30.018
+        const payrools = []
+        let numSS = ''
+        const numSSList = []
+        const bonusRows = []
+        for (const data of datas) {
+            if (data.id === 'S21.G00.30.001') {
+                //New employee
+                numSS = data.value
+                numSSList.push(numSS)
+            }
+            bonusRows.push({
+                numSS,
+                ...data
+            })
+            if (data.id === 'S21.G00.30.018') {
+                //End employee
+                numSS = ''
+            }
+
+        }
+        for (const numSS of numSSList) {
+            const bonus = bonusRows.filter(dsnRow => dsnRow.numSS === numSS)
+            payrools.push(this.makeDynamicObject<BonusObject>(bonus))
+        }
+        return payrools
+    }
 
 
 

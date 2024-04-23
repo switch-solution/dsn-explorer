@@ -1,21 +1,15 @@
 "use client";
+import { useContext } from "react"
+import { DsnContext } from "@/src/context/dsn.context";
 import { CardWithContent } from "@/components/layout/card";
-import { Container, ContainerCard, ContainerBreadCrumb } from "@/components/layout/containter";
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+import { ContainerCard } from "@/components/layout/containter";
+import { ButtonExportCsv } from "@/components/layout/buttonExportCsv";
 import { Ul, Li } from "@/components/layout/ul";
-import { ComboboxDemo } from "@/components/layout/combobox"
 import { ArrowRight } from "lucide-react";
-import { useDsnStore } from "@/src/store/dsn.store";
 import Link from "next/link";
 import { DsnParser } from "@/src/parser/dsnParser";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
+import type { EmployeeObject } from "@/src/type/type";
 import {
     Table,
     TableBody,
@@ -28,60 +22,77 @@ import {
 } from "@/components/ui/table"
 export function Employee({ query }: { query: string }) {
     const router = useRouter()
-    const { dsn } = useDsnStore()
-    if (dsn.length === 0) {
+    const dsnData = []
+    const context = useContext(DsnContext);
+    if (context !== null) {
+        const { dsn } = context;
+        dsnData.push(...dsn)
+    }
+    if (dsnData.length === 0) {
         router.push('/')
     }
+
     const employees = []
-    for (const dsnRow of dsn) {
+    const dsnStructure = []
+    for (const dsnRow of dsnData) {
         employees.push(...new DsnParser(dsnRow.dsnRows).employees)
+    }
+    if (dsnData.length > 0) {
+        dsnStructure.push(...new DsnParser(dsnData[0].dsnRows).dsnStructure('Employee'))
     }
     const workContracts = []
 
-    for (const dsnRow of dsn) {
+    for (const dsnRow of dsnData) {
         workContracts.push(...new DsnParser(dsnRow.dsnRows).workContracts)
     }
-
     const payrools = []
 
-    for (const dsnRow of dsn) {
+    for (const dsnRow of dsnData) {
         payrools.push(...new DsnParser(dsnRow.dsnRows).payrool)
     }
 
     const employeeFind = employees.find(employee => employee.numSS === query)
+    if (!employeeFind) {
+        notFound()
+    }
     const workContractFilter = workContracts.filter(workContract => workContract.numSS === query)
+
+    const workContractFilterSet = new Set()
+    const workContractList = []
+    for (const workContract of workContractFilter) {
+        const contractId = workContract.contractId
+        if (!workContractFilterSet.has(contractId)) {
+            workContractList.push(workContract)
+            workContractFilterSet.add(contractId)
+        }
+
+    }
+    const payroolFilterSet = new Set()
+    const payroolList = []
     const payroolFilter = payrools.filter(payrool => payrool.numSS === query)
+    for (const payrool of payroolFilter) {
+        const startDatePayrool = payrool.startDatePayrool
+        if (!payroolFilterSet.has(startDatePayrool)) {
+            payroolList.push(payrool)
+            payroolFilterSet.add(startDatePayrool)
+        }
+    }
+
     return (
-        <Container>
-            <ContainerBreadCrumb>
-                <Breadcrumb>
-                    <BreadcrumbList>
-                        <BreadcrumbItem>
-                            <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                            <BreadcrumbLink href="/employee">Salariés</BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator />
-                    </BreadcrumbList>
-                </Breadcrumb>
-            </ContainerBreadCrumb>
+        <>
+            <ButtonExportCsv data={employees} />
             {query ?
+
                 <ContainerCard>
                     <CardWithContent props={{ cardTitle: `${employeeFind?.lastname} ${employeeFind?.firstname}`, cardDescription: 'Fiche du salarié', cardFooter: `` }}>
                         <Ul>
-                            <Li>Nom : {employeeFind?.lastname}</Li>
-                            <Li>Prénom : {employeeFind?.firstname}</Li>
-                            <Li>Adresse 1 : {employeeFind?.address1}</Li>
-                            <Li>Adresse 2 : {employeeFind?.address2}</Li>
-                            <Li>Adresse 3 : {employeeFind?.address3}</Li>
-                            <Li>Code postal : {employeeFind?.codeZip}</Li>
-                            <Li>Ville : {employeeFind?.city}</Li>
-                            <Li>Date de naissance : {employeeFind?.birthday}</Li>
-                            <Li>Département de naissance : {employeeFind?.codeZipBith}</Li>
-                            <Li>Ville de naissance: {employeeFind?.placeOfBith}</Li>
-                            <Li>Pays de naissance: {employeeFind?.countryBirth}</Li>
+                            {dsnStructure.map((employee) => {
+                                const field = employee.field as keyof EmployeeObject
+                                const dsnId = employee.dsnStructure
+                                const name = employee.name
+                                const value = employeeFind[field]
+                                return <Li key={field} value={value ? value : ''} dsnId={dsnId} name={name} />
+                            })}
                         </Ul>
                     </CardWithContent>
                     <CardWithContent props={{ cardTitle: 'Contrat de travail', cardDescription: 'Liste des contrats de travail', cardFooter: `` }}>
@@ -91,17 +102,19 @@ export function Employee({ query }: { query: string }) {
                                 <TableRow>
                                     <TableHead className="w-[100px]">Type de contrat</TableHead>
                                     <TableHead>Date de début</TableHead>
+                                    <TableHead>Date de fin</TableHead>
                                     <TableHead>Contrat id DSN</TableHead>
                                     <TableHead className="text-right">Détail</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {workContractFilter.map((contract) => (
+                                {workContractList.map((contract) => (
                                     <TableRow key={contract.numSS}>
                                         <TableCell className="font-medium">{contract.contract}</TableCell>
                                         <TableCell>{contract.startDate}</TableCell>
+                                        <TableCell>{contract.contractEndDate}</TableCell>
                                         <TableCell>{contract.contractId}</TableCell>
-                                        <TableCell className="text-right"><Link href={`/employee/${query}/`}><ArrowRight /></Link></TableCell>
+                                        <TableCell className="text-right"><Link href={`/employee/${query}/workContract/${contract.contractId}`}><ArrowRight /></Link></TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -125,12 +138,12 @@ export function Employee({ query }: { query: string }) {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {payroolFilter.map((payrool) => (
+                                {payroolList.map((payrool) => (
                                     <TableRow key={payrool.numSS}>
                                         <TableCell className="font-medium">{payrool.startDatePayrool}</TableCell>
                                         <TableCell>{payrool.amount}</TableCell>
                                         <TableCell>{payrool.type}</TableCell>
-                                        <TableCell className="text-right"><Link href={`/employee/${query}/payrool`}><ArrowRight /></Link></TableCell>
+                                        <TableCell className="text-right"><Link href={`/employee/${query}/payrool/${payrool.startDatePayrool}`}><ArrowRight /></Link></TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -150,6 +163,6 @@ export function Employee({ query }: { query: string }) {
 
 
 
-        </Container>
+        </>
     );
 }

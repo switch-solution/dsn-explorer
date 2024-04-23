@@ -1,16 +1,25 @@
 "use client";
-import { useState } from "react"
+import { useState, useContext } from "react"
+import { DsnContext } from "@/src/context/dsn.context";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner"
-import { useDsnStore } from "@/src/store/dsn.store";
 import { useRouter } from "next/navigation";
-
+import type { Dsn } from "@/src/context/dsn.context";
 
 export default function UploadFileDsn() {
+    const dsnData = []
+    let addFile: (file: Dsn) => void;
+    let lenghtDsnLoad = 0
+    const context = useContext(DsnContext);
+    if (context !== null) {
+        const { dsn, addDsn } = context;
+        lenghtDsnLoad = dsn.length
+        dsnData.push(...dsn)
+        addFile = addDsn
+    }
     const router = useRouter()
-    const { dsn, addDsn } = useDsnStore()
     const [loading, setLoading] = useState(false)
 
     const parseFile = async (file: File, random: string) => {
@@ -54,22 +63,42 @@ export default function UploadFileDsn() {
         const files = dsn.files ? Array.from(dsn.files) : []
         try {
             for (let file of files) {
-                const random = Math.random().toString(36).substring(7)
-                const dsnRows = await parseFile(file, random) as { id: string, value: string }[]
-                addDsn({ dsnId: random, dsnRows: dsnRows })
+                lenghtDsnLoad++
+                if (lenghtDsnLoad <= 20) {
+                    const random = Math.random().toString(36).substring(7)
+                    const dsnRows = await parseFile(file, random) as { id: string, value: string }[]
+                    addFile({ dsnId: random, dsnRows: dsnRows })
+                }
+
             }
-            router.push("/establishment")
         } catch (err) {
             setLoading(false);
             toast(`${err}`, {
                 description: new Date().toLocaleDateString(),
                 action: {
                     label: "fermer",
-                    onClick: () => console.log("fermeture"),
+                    onClick: () => {
+                    },
                 },
             });
             console.error(err);
         }
+        if (lenghtDsnLoad > 20) {
+            toast(`Vous ne pouvez pas charger plus de 20 fichiers. Vous devevez actualiser la page pour vider la mémoire.`, {
+                description: new Date().toLocaleDateString(),
+                action: {
+                    label: "fermer",
+                    onClick: () => {
+                    },
+                },
+            })
+            router.refresh()
+
+        } else {
+            router.push("/establishment")
+
+        }
+
         setLoading(false);
 
     }

@@ -8,6 +8,7 @@ import { Header } from '@/components/layout/header'
 const inter = Inter({ subsets: ['latin'] })
 import NavBar from '@/components/layout/navBar'
 import { Toaster } from "@/components/ui/sonner"
+import { DsnContextProvider } from '@/src/context/dsn.context'
 export const metadata: Metadata = {
   title: 'Dsn Exploreur',
   description: 'Utilitaire de lecture de fichiers de la Déclaration Sociale Nominative (DSN)',
@@ -26,14 +27,16 @@ export default async function RootLayout({
     <html lang="fr" className='h-full' suppressHydrationWarning>
       <body className={clsx(inter.className, 'flex min-h-screen w-full flex-col bg-muted/40')}>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
-          <Header>
-            <NavBar />
-          </Header>
-          <main className='flex size-full flex-col items-center'>
-            {children}
-            <Toaster />
-          </main>
-          {modal}
+          <DsnContextProvider>
+            <Header>
+              <NavBar />
+            </Header>
+            <main className='flex size-full flex-col items-center'>
+              {children}
+              <Toaster />
+            </main>
+            {modal}
+          </DsnContextProvider>
         </ThemeProvider>
       </body>
     </html>

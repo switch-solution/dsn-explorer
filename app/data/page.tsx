@@ -1,4 +1,6 @@
 "use client";
+import { useContext } from "react";
+import { DsnContext } from "@/src/context/dsn.context";
 import { columns } from "./columns"
 import { CardWithContent } from "@/components/layout/card";
 import { Container, ContainerCard, ContainerBreadCrumb } from "@/components/layout/containter";
@@ -11,10 +13,15 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { DataTable } from "@/components/layout/datatable";
-import { useDsnStore } from "@/src/store/dsn.store";
-export default function Home() {
-    const { dsn } = useDsnStore()
-    const datas = dsn.map((data) => {
+
+export default function Page() {
+    const dsnData = []
+    const context = useContext(DsnContext);
+    if (context !== null) {
+        const { dsn } = context;
+        dsnData.push(...dsn)
+    }
+    const datas = dsnData.map((data) => {
         return data.dsnRows.map((row) => {
             return {
                 id: data.dsnId,
@@ -41,8 +48,8 @@ export default function Home() {
                 </Breadcrumb>
             </ContainerBreadCrumb>
             <ContainerCard>
-                <CardWithContent props={{ cardTitle: 'Upload fichier DSN', cardDescription: 'Cette utilitaire fonctionne uniquement en local. Vos données ne sont pas envoyées sur le serveur.', cardFooter: `Actuellement l\'application contient ${dsn.length}` }}>
-                    <DataTable columns={columns} data={datas} inputSearch="dsnId" inputSearchPlaceholder="Chercher par structure DSN" />
+                <CardWithContent props={{ cardTitle: 'Upload fichier DSN', cardDescription: 'Cette utilitaire fonctionne uniquement en local. Vos données ne sont pas envoyées sur le serveur.', cardFooter: `Actuellement l\'application contient ${dsnData.length}` }}>
+                    <DataTable columns={columns} data={datas} inputSearch="id" inputSearchPlaceholder="Chercher par id interne" />
                 </CardWithContent>
             </ContainerCard>
         </Container>

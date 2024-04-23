@@ -1,4 +1,6 @@
 "use client";
+import { useContext } from "react";
+import { DsnContext } from "@/src/context/dsn.context";
 import { columns } from "./dataTablecolumns"
 import {
     Breadcrumb,
@@ -9,18 +11,23 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { DataTable } from "@/components/layout/datatable";
-import { useDsnStore } from "@/src/store/dsn.store";
 import { useRouter } from "next/navigation";
 import { DsnParser } from "@/src/parser/dsnParser";
+import Link from "next/link";
 import { Container, ContainerBreadCrumb, ContainerCard } from "@/components/layout/containter";
 export default function Page() {
     const router = useRouter()
-    const { dsn } = useDsnStore()
-    if (dsn.length === 0) {
+    let dsnData = []
+    const context = useContext(DsnContext);
+    if (context !== null) {
+        const { dsn } = context;
+        dsnData.push(...dsn)
+    }
+    if (dsnData.length === 0) {
         router.push('/')
     }
     const employees = []
-    for (const dsnRow of dsn) {
+    for (const dsnRow of dsnData) {
         employees.push(...new DsnParser(dsnRow.dsnRows).employees)
     }
     const employeesDatas = employees.map(employee => {
@@ -28,6 +35,13 @@ export default function Page() {
             numSS: employee.numSS,
             lastname: employee.lastname,
             firstname: employee.firstname
+        }
+    })
+    const setEmployee = new Set()
+    const employeesFilter = employeesDatas.filter(employee => {
+        if (!setEmployee.has(employee.numSS)) {
+            setEmployee.add(employee.numSS)
+            return employee
         }
     })
     return (
@@ -40,14 +54,14 @@ export default function Page() {
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/employee">Salariés</BreadcrumbLink>
+                            <Link href="/employee">Salariés</Link>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                     </BreadcrumbList>
                 </Breadcrumb>
             </ContainerBreadCrumb>
             <ContainerCard>
-                <DataTable columns={columns} data={employeesDatas} inputSearch="lastname" inputSearchPlaceholder="Chercher par nom" />
+                <DataTable columns={columns} data={employeesFilter} inputSearch="lastname" inputSearchPlaceholder="Chercher par nom" />
             </ContainerCard>
         </Container>
 
