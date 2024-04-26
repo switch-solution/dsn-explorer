@@ -21,6 +21,8 @@ import {
     ShoppingCart,
     Package,
     User,
+    Pickaxe,
+    Scale,
 
 } from "lucide-react"
 export default function NavBar() {
@@ -49,20 +51,25 @@ export default function NavBar() {
                         </Tooltip>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Link href={`/establishment`}
+                                <Link href={`/extraction`}
                                     className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
-
-                                ><Building2 /></Link>
+                                ><Pickaxe /></Link>
                             </TooltipTrigger>
-                            <TooltipContent side="right">Etablissement</TooltipContent>
+                            <TooltipContent side="right">Extraction</TooltipContent>
 
                         </Tooltip>
                         <Tooltip>
-
+                            <TooltipTrigger asChild>
+                                <Link href={`/establishment`}
+                                    className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
+                                ><Building2 /></Link>
+                            </TooltipTrigger>
+                            <TooltipContent side="right">Etablissement</TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
                             <TooltipTrigger asChild>
                                 <Link href={`/employee`}
                                     className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
-
                                 ><User /></Link>
                             </TooltipTrigger>
                             <TooltipContent side="right">Salariés</TooltipContent>
@@ -72,6 +79,22 @@ export default function NavBar() {
                     </nav>
                     <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
                         <Tooltip>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Link href={`https://github.com/switch-solution/dsn-explorer`}
+                                        className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
+                                    ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg></Link>
+                                </TooltipTrigger>
+                                <TooltipContent side="right">Github</TooltipContent>
+                            </Tooltip>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Link href={`/legal`}
+                                        className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
+                                    ><Scale /></Link>
+                                </TooltipTrigger>
+                                <TooltipContent side="right">Mention légale</TooltipContent>
+                            </Tooltip>
                             <TooltipTrigger asChild>
                                 <Link
                                     href={`/data`}
@@ -100,52 +123,38 @@ export default function NavBar() {
                 <SheetTrigger asChild>
                     <Button size="icon" variant="outline" className="sm:hidden">
                         <PanelLeft className="size-5" />
-                        <span className="sr-only">Toggle Menu</span>
+                        <span className="sr-only">Menu</span>
                     </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="sm:max-w-xs">
                     <nav className="grid gap-6 text-lg font-medium">
                         <Link
-                            href="#"
-                            className="group flex size-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-                        >
-                            <Package2 className="size-5 transition-all group-hover:scale-110" />
-                            <span className="sr-only">Acme Inc</span>
-                        </Link>
-                        <Link
-                            href="#"
+                            href="/"
                             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                         >
                             <Home className="size-5" />
-                            Dashboard
+                            Accueil
                         </Link>
                         <Link
-                            href="#"
+                            href="/extraction"
                             className="flex items-center gap-4 px-2.5 text-foreground"
                         >
-                            <ShoppingCart className="size-5" />
-                            Orders
+                            <Pickaxe className="size-5" />
+                            Extraction
                         </Link>
                         <Link
                             href="#"
                             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                         >
-                            <Package className="size-5" />
-                            Products
+                            <Building2 className="size-5" />
+                            Etablissement
                         </Link>
                         <Link
-                            href="#"
+                            href="/employee"
                             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                         >
                             <Users2 className="size-5" />
-                            Customers
-                        </Link>
-                        <Link
-                            href="#"
-                            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                        >
-                            <LineChart className="size-5" />
-                            Settings
+                            Salariés
                         </Link>
                     </nav>
                 </SheetContent>

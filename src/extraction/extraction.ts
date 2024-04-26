@@ -1774,6 +1774,12 @@ l’hypothèse d’un poste à temps complet`,
     },
     {
         collection: 'WorkStopping',
+        field: 'numSS',
+        name: `Numéro de sécurité sociale`,
+        dsnStructure: 'SS21.G00.30.001'
+    },
+    {
+        collection: 'WorkStopping',
         field: 'reasonStop',
         name: `Motif de l'arrêt`,
         dsnStructure: 'S21.G00.60.001'

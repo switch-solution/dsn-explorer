@@ -1,5 +1,5 @@
 import { extractionsList } from "@/src/extraction/extraction"
-import { EstablishmentObject, EmployeeObject, WorkContractObject, PayroolObject, MutualObject, BonusObject, RateAtObject } from "@/src/type/type"
+import { EstablishmentObject, EmployeeObject, WorkContractObject, PayroolObject, MutualObject, BonusObject, RateAtObject, DsnObject, SenderObject, SocietyObject, WorkStoppingObject } from "@/src/type/type"
 export class DsnParser {
     dsnRows: { id: string, value: string }[] = []
     constructor(dsnRows: { id: string, value: string }[]) {
@@ -30,7 +30,6 @@ export class DsnParser {
     }
 
     private dsnObject(dsnStructure: string[]) {
-
         const structureDsnLabel = extractionsList.filter(extraction => dsnStructure.includes(extraction.dsnStructure))
         const dsnId = structureDsnLabel.map(extraction => {
             return {
@@ -49,10 +48,29 @@ export class DsnParser {
         return dynamicObject
     }
 
+    get dsn() {
+        const datas = this.filterByStructureDsn('Dsn')
+        const establishment = this.makeDynamicObject<DsnObject>(datas)
+        return establishment
+    }
+
+    get sender() {
+        const datas = this.filterByStructureDsn('Sender')
+        const establishment = this.makeDynamicObject<SenderObject>(datas)
+        return establishment
+    }
+
+
+    get society() {
+        const datas = this.filterByStructureDsn('Society')
+        const establishment = this.makeDynamicObject<SocietyObject>(datas)
+        return establishment
+    }
+
+
     get establishment() {
         const datas = this.filterByStructureDsn('Establishment')
         const establishment = this.makeDynamicObject<EstablishmentObject>(datas)
-
         return establishment
     }
 
@@ -88,6 +106,36 @@ export class DsnParser {
         return mutuals
     }
 
+    get workStopping(): WorkStoppingObject[] {
+        const datas = this.filterByStructureDsn('WorkStopping')
+        //Employee start S21.G00.30.001
+        //Employee end 'S21.G00.30.018
+        const workStopping = []
+        let numSS = ''
+        const numSSList = []
+        const workStoppingRows = []
+        for (const data of datas) {
+            if (data.id === 'S21.G00.30.001') {
+                //New employee
+                numSS = data.value
+                numSSList.push(numSS)
+            }
+            workStoppingRows.push({
+                numSS,
+                ...data
+            })
+            if (data.id === 'S21.G00.30.018') {
+                //End employee
+                numSS = ''
+            }
+        }
+        for (const numSS of numSSList) {
+            const employee = workStoppingRows.filter(dsnRow => dsnRow.numSS === numSS)
+            workStopping.push(this.makeDynamicObject<WorkStoppingObject>(employee))
+        }
+        return workStopping
+    }
+
     get employees(): EmployeeObject[] {
         const datas = this.filterByStructureDsn('Employee')
         //Employee start S21.G00.30.001
@@ -110,7 +158,6 @@ export class DsnParser {
                 //End employee
                 numSS = ''
             }
-
         }
         for (const numSS of numSSList) {
             const employee = employeesRows.filter(dsnRow => dsnRow.numSS === numSS)

@@ -177,3 +177,65 @@ export type RateAtObject = {
     nic: string,
 
 }
+
+export type DsnObject = {
+    softwareName: string,
+    provider: string,
+    softwareVersion: string,
+    dsnVersion: string,
+    month: string,
+    type: string,
+    totalRows: string,
+
+}
+
+export type SenderObject = {
+    nicSender: string,
+    nameSender: string,
+    addressSender: string,
+    zipCodeSender: string,
+    citySender: string,
+    countrySender: string,
+    foreignDistributionCodeSender: string,
+    complementLocalisationSender: string,
+    distributionServiceSender: string
+
+}
+
+export type SocietyObject = {
+    siren: string,
+    nic: string,
+    apen: string,
+    adress1: string,
+    adress2?: string,
+    adress3?: string,
+    zipCode: string,
+    city: string,
+    date: string,
+    averageWorkForce31DecemberSociety: string,
+    countrySociety: string,
+    foreignDistributionCode: string,
+    establishmentOfTheCompany: string,
+    idcc: string
+}
+
+
+export type WorkStoppingObject = {
+    employeeId: string,
+    numSS: string,
+    reasonStop: string,
+    lastDayWorked: string,
+    estimatedEndDate: string,
+    subrogation?: string,
+    subrogationStartDate?: string,
+    subrogationEndDate?: string,
+    iban?: string,
+    bic?: string,
+    recoveryDate?: string,
+    reasonRecovery?: string,
+    dateWorkAccident?: string,
+    SIRETCentralizer?: string,
+    date: string,
+    siret: string
+}
+

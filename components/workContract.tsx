@@ -23,26 +23,20 @@ export default function WorkContract({ numSS, contractId }: { numSS: string, con
     const extractionWorkContract = extractionsList.filter(extraction => extraction.collection === 'WorkContract')
 
     return (
-        <>
+        <ContainerCard>
+            <CardWithContent props={{ cardTitle: 'Contrat de travail', cardDescription: 'Liste des contrats de travail', cardFooter: `` }}>
+                <Ul>
+                    {extractionWorkContract.map((extraction) => {
+                        return <Li key={extraction.dsnStructure}
+                            name={extraction.name}
+                            dsnId={extraction.dsnStructure}
+                            value={workContractFind?.[extraction.field as keyof WorkContractObject]}></Li>
+                    })
+                    }
+                </Ul>
 
-            <ButtonExportCsv data={workContractList} />
-            <ContainerCard>
-                <CardWithContent props={{ cardTitle: 'Contrat de travail', cardDescription: 'Liste des contrats de travail', cardFooter: `` }}>
-                    <Ul>
-                        {extractionWorkContract.map((extraction) => {
-                            return <Li key={extraction.dsnStructure}
-                                name={extraction.name}
-                                dsnId={extraction.dsnStructure}
-                                value={workContractFind?.[extraction.field as keyof WorkContractObject]}></Li>
-                        })
-                        }
-                    </Ul>
+            </CardWithContent>
 
-                </CardWithContent>
-
-            </ContainerCard>
-
-
-        </>
+        </ContainerCard>
     );
 }

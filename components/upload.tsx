@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner"
 import { useRouter } from "next/navigation";
 import type { Dsn } from "@/src/context/dsn.context";
-import type { EmployeeObject, EstablishmentObject, RateAtObject, WorkContractObject } from "@/src/type/type";
+import type { EmployeeObject, EstablishmentObject, RateAtObject, WorkContractObject, WorkStoppingObject, PayroolObject, SocietyObject, MutualObject } from "@/src/type/type";
 import { DsnParser } from "@/src/parser/dsnParser";
+
 export default function UploadFileDsn() {
     const dsnData: Dsn[] = []
     const addDSnData: Dsn[] = []
@@ -16,25 +17,44 @@ export default function UploadFileDsn() {
     const employeeSet = new Set<string>()
     const workContractSet = new Set<string>()
     const rateAtSet = new Set<string>()
+    const workStoppingSet = new Set<string>()
+    const payroolSet = new Set<string>()
+    const societySet = new Set<string>()
+    const mutualSet = new Set<string>()
     let addFile: (file: Dsn) => void;
     let addEstablishment: (establishment: EstablishmentObject) => void;
     let addEmployee: (employee: EmployeeObject) => void;
     let addRateAt: (rateAt: RateAtObject) => void;
     let addWorkContract: (workContract: WorkContractObject) => void;
+    let addWorkStopping: (workStopping: WorkStoppingObject) => void;
+    let addPayrool: (payrool: PayroolObject) => void;
+    let addSociety: (society: SocietyObject) => void;
+    let addMutual: (mutual: MutualObject) => void;
+    let removeAll: () => void;
     const employeeList: EmployeeObject[] = []
     const establishmentsList: EstablishmentObject[] = []
-
+    const workStoppingList: WorkStoppingObject[] = []
+    const payroolList: PayroolObject[] = []
+    const mutualList: MutualObject[] = []
     const context = useContext(DsnContext);
     if (context !== null) {
-        const { dsn, employees, establishments, addDsn, addEstablishments, addEmployees, addRatesAt, addWorkContracts } = context;
+        const { dsn, employees, establishments, workStoppings, payrools, mutuals, addDsn, addEstablishments, addEmployees, addRatesAt, addWorkContracts, addWorkStoppings, addPayrools, addSocietys, addMutuals, removeDsn } = context;
         dsnData.push(...dsn)
         employeeList.push(...employees)
         establishmentsList.push(...establishments)
+        workStoppingList.push(...workStoppings)
+        payroolList.push(...payrools)
+        mutualList.push(...mutuals)
         addFile = addDsn
         addEstablishment = addEstablishments
         addEmployee = addEmployees
         addRateAt = addRatesAt
         addWorkContract = addWorkContracts
+        addWorkStopping = addWorkStoppings
+        addPayrool = addPayrools
+        addSociety = addSocietys
+        addMutual = addMutuals
+        removeAll = removeDsn
     }
     const router = useRouter()
     const [loading, setLoading] = useState(false)
@@ -102,17 +122,50 @@ export default function UploadFileDsn() {
                     addWorkContract(workContract)
                 }
             }
-
+            const workStoppings = parser.workStopping
+            for (const workStopping of workStoppings) {
+                if (!workStoppingSet.has(`${workStopping.numSS}-${workStopping.date}`)) {
+                    workStoppingSet.add(`${workStopping.numSS}-${workStopping.date}`)
+                    addWorkStopping(workStopping)
+                }
+            }
+            const payrools = parser.payrool
+            for (const payrool of payrools) {
+                if (!payroolSet.has(`${payrool.numSS}-${payrool.startDatePayrool}-${payrool.endDatePayrool}`)) {
+                    payroolSet.add(`${payrool.numSS}-${payrool.startDatePayrool}-${payrool.endDatePayrool}`)
+                    addPayrool(payrool)
+                }
+            }
+            const society = parser.society
+            if (!societySet.has(society.siren)) {
+                societySet.add(society.siren)
+                addSociety(society)
+            }
+            const mutuals = parser.mutual
+            for (const mutual of mutuals) {
+                if (!mutualSet.has(mutual.contractId ? mutual.contractId : "")) {
+                    mutualSet.add(mutual.contractId ? mutual.contractId : "")
+                    addMutual(mutual)
+                }
+            }
         }
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setLoading(true)
+        toast(`Début chargement des données`, {
+            description: new Date().toLocaleDateString(),
+            action: {
+                label: "fermer",
+                onClick: () => undefined,
+            },
+        })
+        removeAll()
+
         const dsn = (e.target as HTMLFormElement).elements[0] as HTMLInputElement
         const files = dsn.files ? Array.from(dsn.files) : []
         try {
-
             //Load file
             for (let file of files) {
                 const random = Math.random().toString(36).substring(7)
@@ -137,7 +190,14 @@ export default function UploadFileDsn() {
             console.error(err);
         }
 
-        router.push("/establishment")
+        toast(`Fin chargement des données`, {
+            description: new Date().toLocaleDateString(),
+            action: {
+                label: "fermer",
+                onClick: () => undefined,
+            },
+        })
+        router.push("/extraction")
 
 
 

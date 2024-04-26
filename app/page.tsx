@@ -36,12 +36,10 @@ export default function Page() {
         </Breadcrumb>
       </ContainerBreadCrumb>
       <ContainerCard>
-        <CardWithContent props={{ cardTitle: 'Upload fichier DSN', cardDescription: 'Cette utilitaire fonctionne uniquement en local. Vos données ne sont pas envoyées sur le serveur. Pour des raisons de perfomances vous ne pouvez pas charger plus de 20 fichiers', cardFooter: `Actuellement l\'application contient ${dsnData.length}` }}>
+        <CardWithContent props={{ cardTitle: 'Upload fichier DSN', cardDescription: 'Cette utilitaire fonctionne uniquement en local. Vos données ne sont pas envoyées sur le serveur. Attention les données sont réinitialisées à chaque envoi.', cardFooter: `Actuellement l\'application contient ${dsnData.length}` }}>
           <UploadFileDsn />
         </CardWithContent>
       </ContainerCard>
-      <Link href={'/legal'}>Mention légale</Link>
-
     </Container>
   );
 }

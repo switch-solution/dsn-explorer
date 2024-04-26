@@ -12,11 +12,9 @@ import {
 } from "@/components/ui/breadcrumb"
 import { DataTable } from "@/components/layout/datatable";
 import { useRouter } from "next/navigation";
-import { DsnParser } from "@/src/parser/dsnParser";
 import Link from "next/link";
 import { Container, ContainerBreadCrumb, ContainerCard } from "@/components/layout/containter";
 export default function Page() {
-    const router = useRouter()
     let employeesList = []
     const context = useContext(DsnContext);
     if (context !== null) {

@@ -13,6 +13,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { DataTable } from "@/components/layout/datatable";
+import Link from "next/link";
 
 export default function Page() {
     const dsnData = []
@@ -37,11 +38,11 @@ export default function Page() {
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
+                            <Link href="/">Accueil</Link>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/data">Vos données</BreadcrumbLink>
+                            <Link href="/data">Vos données</Link>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                     </BreadcrumbList>
