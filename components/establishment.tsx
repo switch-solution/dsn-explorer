@@ -14,80 +14,40 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import { extractionsList } from "@/src/extraction/extraction";
 import { ButtonExportCsv } from "@/components/layout/buttonExportCsv";
-import { DsnParser } from "@/src/parser/dsnParser";
-import { useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Ul, Li } from "./layout/ul";
 export function Establishment({ query }: { query: string }) {
-    const router = useRouter()
-    const dsnData = []
     const context = useContext(DsnContext);
+    const establishementsList: EstablishmentObject[] = []
     if (context !== null) {
-        const { dsn } = context;
-        dsnData.push(...dsn)
+        const { establishments } = context;
+        establishementsList.push(...establishments)
     }
+    const extractionEstablishment = extractionsList.filter(extraction => extraction.collection === 'Establishment')
 
-    if (dsnData.length === 0) {
-        router.push('/')
-    }
-    const establishments = []
-    const dsnStructure = []
-    for (const dsnRow of dsnData) {
-        establishments.push(new DsnParser(dsnRow.dsnRows).establishment)
-    }
-
-    if (dsnData.length > 0) {
-        dsnStructure.push(...new DsnParser(dsnData[0].dsnRows).dsnStructure('Establishment'))
-    }
-
-    const establishmentFind = establishments.find(establishmentFilter => establishmentFilter.nic === query)
+    const establishmentFind = establishementsList.find(establishment => establishment.nic === query)
     if (!establishmentFind) {
-        throw new Error('Establishment not found')
-    }
-    const establishmentSet = new Set()
-    for (const establishment of establishments) {
-
+        notFound()
     }
 
-    const rateAtList = []
-
-    for (const dsnRow of dsnData) {
-        rateAtList.push(...new DsnParser(dsnRow.dsnRows).rateAt)
-    }
-
-    const rateAtFilter = rateAtList.filter(rateAt => rateAt.nic === query)
-    const rateAtSet = new Set()
-    const rateAtDatas = []
-    for (const rateAt of rateAtFilter) {
-        if (!rateAtSet.has(rateAt.idWorkAccidentRisk)) {
-            rateAtDatas.push({
-                idWorkAccidentRisk: rateAt.idWorkAccidentRisk,
-                rateAt: rateAt.rateAt
-            })
-            rateAtSet.add(rateAt.idWorkAccidentRisk)
-        }
-    }
-    const mutuals = []
-    for (const dsnRow of dsnData) {
-        mutuals.push(...new DsnParser(dsnRow.dsnRows).mutual)
-    }
 
     return (
         <>
 
-            <ButtonExportCsv data={establishments} />
+            <ButtonExportCsv data={establishementsList} />
 
             <ContainerCard>
                 <CardWithContent props={{ cardTitle: 'Etablissement', cardDescription: 'Liste de vos établissements', cardFooter: `` }}>
                     <Ul>
-                        {dsnStructure.map((establishment) => {
-                            const field = establishment.field as keyof EstablishmentObject
-                            const dsnId = establishment.dsnStructure
-                            const name = establishment.name
-                            const value = establishmentFind[field]
-                            return <Li key={field} value={value ? value : ''} dsnId={dsnId} name={name} />
-
-                        })}
+                        {extractionEstablishment.map((extraction) => {
+                            return <Li key={extraction.dsnStructure}
+                                name={extraction.name}
+                                dsnId={extraction.dsnStructure}
+                                value={establishmentFind?.[extraction.field as keyof EstablishmentObject]}></Li>
+                        })
+                        }
                     </Ul>
                 </CardWithContent>
                 <CardWithContent props={{ cardTitle: 'Taux AT', cardDescription: 'Liste des taux AT', cardFooter: `` }}>
@@ -100,17 +60,12 @@ export function Establishment({ query }: { query: string }) {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {rateAtDatas.map((rateAt) => (
-                                <TableRow key={rateAt.idWorkAccidentRisk}>
-                                    <TableCell className="font-medium">{rateAt.idWorkAccidentRisk}</TableCell>
-                                    <TableCell>{rateAt.rateAt}</TableCell>
-                                </TableRow>
-                            ))}
+
                         </TableBody>
                         <TableFooter>
                             <TableRow>
                                 <TableCell colSpan={3}>Total</TableCell>
-                                <TableCell className="text-right">{rateAtDatas.length}</TableCell>
+                                <TableCell className="text-right">{5}</TableCell>
                             </TableRow>
                         </TableFooter>
                     </Table>

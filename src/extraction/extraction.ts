@@ -897,12 +897,6 @@ export const extractionsList: extractions = [
     },
     {
         collection: 'WorkContract',
-        field: 'joiningDate',
-        name: `Date d'adhésion`,
-        dsnStructure: 'S21.G00.40.030'
-    },
-    {
-        collection: 'WorkContract',
         field: 'denunciationDate',
         name: `Date de dénonciation`,
         dsnStructure: 'S21.G00.40.031'

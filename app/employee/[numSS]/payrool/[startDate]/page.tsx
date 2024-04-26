@@ -15,7 +15,7 @@ import { Ul, Li } from "@/components/layout/ul";
 import { DsnParser } from "@/src/parser/dsnParser";
 import { notFound, useRouter } from "next/navigation";
 import { BonusObject } from "@/src/type/type";
-
+import Link from "next/link";
 export default function Page({ params }: { params: { numSS: string, startDate: string } }) {
     const context = useContext(DsnContext);
     const dsnData = []
@@ -45,7 +45,7 @@ export default function Page({ params }: { params: { numSS: string, startDate: s
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
+                            <Link href="/">Accueil</Link>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>

@@ -12,6 +12,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import Link from "next/link";
+import { CardFooter } from "@/components/ui/card";
 export default function Page() {
   const context = useContext(DsnContext);
   let dsnData = []
@@ -27,7 +29,7 @@ export default function Page() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
+              <Link href="/">Accueil</Link>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
           </BreadcrumbList>
@@ -38,6 +40,8 @@ export default function Page() {
           <UploadFileDsn />
         </CardWithContent>
       </ContainerCard>
+      <Link href={'/legal'}>Mention légale</Link>
+
     </Container>
   );
 }

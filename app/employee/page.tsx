@@ -17,40 +17,19 @@ import Link from "next/link";
 import { Container, ContainerBreadCrumb, ContainerCard } from "@/components/layout/containter";
 export default function Page() {
     const router = useRouter()
-    let dsnData = []
+    let employeesList = []
     const context = useContext(DsnContext);
     if (context !== null) {
-        const { dsn } = context;
-        dsnData.push(...dsn)
+        const { employees } = context;
+        employeesList.push(...employees)
     }
-    if (dsnData.length === 0) {
-        router.push('/')
-    }
-    const employees = []
-    for (const dsnRow of dsnData) {
-        employees.push(...new DsnParser(dsnRow.dsnRows).employees)
-    }
-    const employeesDatas = employees.map(employee => {
-        return {
-            numSS: employee.numSS,
-            lastname: employee.lastname,
-            firstname: employee.firstname
-        }
-    })
-    const setEmployee = new Set()
-    const employeesFilter = employeesDatas.filter(employee => {
-        if (!setEmployee.has(employee.numSS)) {
-            setEmployee.add(employee.numSS)
-            return employee
-        }
-    })
     return (
         <Container>
             <ContainerBreadCrumb>
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
+                            <Link href="/">Accueil</Link>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
@@ -61,7 +40,7 @@ export default function Page() {
                 </Breadcrumb>
             </ContainerBreadCrumb>
             <ContainerCard>
-                <DataTable columns={columns} data={employeesFilter} inputSearch="lastname" inputSearchPlaceholder="Chercher par nom" />
+                <DataTable columns={columns} data={employeesList} inputSearch="lastname" inputSearchPlaceholder="Chercher par nom" />
             </ContainerCard>
         </Container>
 

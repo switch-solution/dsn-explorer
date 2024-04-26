@@ -16,7 +16,7 @@ export default function Page({ params }: { params: { numSS: string, contractId: 
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
+                            <Link href="/">Accueil</Link>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>

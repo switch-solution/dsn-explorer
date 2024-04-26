@@ -10,7 +10,7 @@ export function Li({
     dsnId
 }: {
     name: string,
-    value: string,
+    value: string | undefined,
     dsnId: string
 
 }) {

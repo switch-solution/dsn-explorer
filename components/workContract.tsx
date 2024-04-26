@@ -4,48 +4,39 @@ import { DsnContext } from "@/src/context/dsn.context";
 import { CardWithContent } from "@/components/layout/card";
 import { ContainerCard } from "@/components/layout/containter";
 import { Ul, Li } from "@/components/layout/ul";
-import { DsnParser } from "@/src/parser/dsnParser";
 import { notFound } from "next/navigation";
-import { WorkContractObject } from "@/src/type/type";
 import { ButtonExportCsv } from "@/components/layout/buttonExportCsv";
+import { extractionsList } from "@/src/extraction/extraction";
+import { WorkContractObject } from "@/src/type/type";
+
 export default function WorkContract({ numSS, contractId }: { numSS: string, contractId: string }) {
-    const dsnData = []
+    const workContractList = []
     const context = useContext(DsnContext);
     if (context !== null) {
-        const { dsn } = context;
-        dsnData.push(...dsn)
+        const { workContracts } = context;
+        workContractList.push(...workContracts)
     }
-    const dsnWorkContractId = []
-    const workContracts = []
-    for (const dsnRow of dsnData) {
-        workContracts.push(...new DsnParser(dsnRow.dsnRows).workContracts)
-        dsnWorkContractId.push(...new DsnParser(dsnRow.dsnRows).dsnStructure('WorkContract'))
-    }
-    const workContractFind = workContracts.find(workContract => workContract.numSS === numSS && workContract.contractId === contractId)
+    const workContractFind = workContractList.find(workContract => workContract.numSS === numSS && workContract.contractId === contractId)
     if (!workContractFind) {
         notFound()
     }
-    const workContractSet = new Set()
+    const extractionWorkContract = extractionsList.filter(extraction => extraction.collection === 'WorkContract')
+
     return (
         <>
 
-            <ButtonExportCsv data={workContracts} />
+            <ButtonExportCsv data={workContractList} />
             <ContainerCard>
                 <CardWithContent props={{ cardTitle: 'Contrat de travail', cardDescription: 'Liste des contrats de travail', cardFooter: `` }}>
-
                     <Ul>
-                        {dsnWorkContractId.map((contract) => {
-                            const field = contract.field as keyof WorkContractObject
-                            const dsnId = contract.dsnStructure
-                            const name = contract.name
-                            const value = workContractFind[field]
-                            if (!workContractSet.has(field)) {
-                                workContractSet.add(field)
-                                return <Li key={field} value={value ? value : ''} dsnId={dsnId} name={name} />
-                            }
-                        })}
+                        {extractionWorkContract.map((extraction) => {
+                            return <Li key={extraction.dsnStructure}
+                                name={extraction.name}
+                                dsnId={extraction.dsnStructure}
+                                value={workContractFind?.[extraction.field as keyof WorkContractObject]}></Li>
+                        })
+                        }
                     </Ul>
-
 
                 </CardWithContent>
 
