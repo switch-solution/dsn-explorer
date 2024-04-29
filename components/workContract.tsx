@@ -5,9 +5,8 @@ import { CardWithContent } from "@/components/layout/card";
 import { ContainerCard } from "@/components/layout/containter";
 import { Ul, Li } from "@/components/layout/ul";
 import { notFound } from "next/navigation";
-import { ButtonExportCsv } from "@/components/layout/buttonExportCsv";
 import { extractionsList } from "@/src/extraction/extraction";
-import { WorkContractObject } from "@/src/type/type";
+import { WorkContractObject } from "@fibre44/dsn-parser/lib/utils/type";
 
 export default function WorkContract({ numSS, contractId }: { numSS: string, contractId: string }) {
     const workContractList = []

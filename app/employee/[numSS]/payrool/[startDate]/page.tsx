@@ -21,11 +21,14 @@ export default function Page({ params }: { params: { numSS: string, startDate: s
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/employee">Salariés</BreadcrumbLink>
+                            <Link href="/employee">Salariés</Link>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href={`/employee/${params.numSS}`}>{params.numSS}</BreadcrumbLink>
+                            <Link href={`/employee/${params.numSS}`}>{params.numSS}</Link>
+                        </BreadcrumbItem>
+                        <BreadcrumbItem>
+                            <Link href={`/employee/${params.numSS}/payrool/${params.startDate}`}>Paie du mois de {params.startDate}</Link>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                     </BreadcrumbList>

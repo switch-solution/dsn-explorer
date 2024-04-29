@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { ButtonExportCsv } from "@/components/layout/buttonExportCsv"
+import { ButtonExportXlsx } from "@/components/layout/butttonExportXlsx"
 export type Establishment = {
     label: string
     count: number
@@ -20,13 +21,22 @@ export const columns: ColumnDef<Establishment>[] = [
         header: "count",
     },
     {
-        accessorKey: "label",
-        header: "label",
+        id: "csv",
+        header: "csv",
         cell: ({ row }) => {
             const data = row.original
             return (
                 <ButtonExportCsv data={data.data} />
-
+            )
+        }
+    },
+    {
+        id: "excel",
+        header: "Excel",
+        cell: ({ row }) => {
+            const data = row.original
+            return (
+                <ButtonExportXlsx data={data.data} />
             )
         }
     },

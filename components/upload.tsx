@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner"
 import { useRouter } from "next/navigation";
 import type { Dsn } from "@/src/context/dsn.context";
-import type { EmployeeObject, EstablishmentObject, RateAtObject, WorkContractObject, WorkStoppingObject, PayroolObject, SocietyObject, MutualObject } from "@/src/type/type";
-import { DsnParser } from "@/src/parser/dsnParser";
+import { DsnParser } from "@fibre44/dsn-parser";
+import type { EmployeeObject, EstablishmentObject, RateAtObject, WorkContractObject, ContributionObject, BankObject, WorkStoppingObject, PayroolObject, SocietyObject, MutualObject, MutualEmployeeObject } from "@fibre44/dsn-parser/lib/utils/type";
 
 export default function UploadFileDsn() {
+
     const dsnData: Dsn[] = []
     const addDSnData: Dsn[] = []
     const establishmentSet = new Set<string>()
@@ -21,6 +22,9 @@ export default function UploadFileDsn() {
     const payroolSet = new Set<string>()
     const societySet = new Set<string>()
     const mutualSet = new Set<string>()
+    const mutualEmployeeSet = new Set<string>()
+    const contributionSet = new Set<string>()
+    const bankSet = new Set<string>()
     let addFile: (file: Dsn) => void;
     let addEstablishment: (establishment: EstablishmentObject) => void;
     let addEmployee: (employee: EmployeeObject) => void;
@@ -30,21 +34,46 @@ export default function UploadFileDsn() {
     let addPayrool: (payrool: PayroolObject) => void;
     let addSociety: (society: SocietyObject) => void;
     let addMutual: (mutual: MutualObject) => void;
+    let addMutualEmployee: (mutualEmployee: MutualEmployeeObject) => void;
     let removeAll: () => void;
+    let addContribution: (contribution: ContributionObject) => void;
+    let addBank: (bank: BankObject) => void;
     const employeeList: EmployeeObject[] = []
     const establishmentsList: EstablishmentObject[] = []
     const workStoppingList: WorkStoppingObject[] = []
     const payroolList: PayroolObject[] = []
     const mutualList: MutualObject[] = []
+    const banksList: BankObject[] = []
     const context = useContext(DsnContext);
     if (context !== null) {
-        const { dsn, employees, establishments, workStoppings, payrools, mutuals, addDsn, addEstablishments, addEmployees, addRatesAt, addWorkContracts, addWorkStoppings, addPayrools, addSocietys, addMutuals, removeDsn } = context;
+        const { dsn,
+            employees,
+            establishments,
+            workStoppings,
+            payrools, mutuals,
+            mutualEmployees,
+            contribution,
+            banks,
+            addDsn,
+            addEstablishments,
+            addEmployees,
+            addRatesAt,
+            addWorkContracts,
+            addWorkStoppings,
+            addPayrools,
+            addSocietys,
+            addMutuals,
+            removeDsn,
+            addMutualsEmployees,
+            addContributions,
+            addBanks } = context;
         dsnData.push(...dsn)
         employeeList.push(...employees)
         establishmentsList.push(...establishments)
         workStoppingList.push(...workStoppings)
         payroolList.push(...payrools)
         mutualList.push(...mutuals)
+        banksList.push(...banks)
         addFile = addDsn
         addEstablishment = addEstablishments
         addEmployee = addEmployees
@@ -55,6 +84,9 @@ export default function UploadFileDsn() {
         addSociety = addSocietys
         addMutual = addMutuals
         removeAll = removeDsn
+        addMutualEmployee = addMutualsEmployees
+        addContribution = addContributions
+        addBank = addBanks
     }
     const router = useRouter()
     const [loading, setLoading] = useState(false)
@@ -80,7 +112,6 @@ export default function UploadFileDsn() {
                         dsnRowsObject.push({
                             id,
                             value
-
                         });
                     }
                 }
@@ -131,10 +162,8 @@ export default function UploadFileDsn() {
             }
             const payrools = parser.payrool
             for (const payrool of payrools) {
-                if (!payroolSet.has(`${payrool.numSS}-${payrool.startDatePayrool}-${payrool.endDatePayrool}`)) {
-                    payroolSet.add(`${payrool.numSS}-${payrool.startDatePayrool}-${payrool.endDatePayrool}`)
-                    addPayrool(payrool)
-                }
+                addPayrool(payrool)
+
             }
             const society = parser.society
             if (!societySet.has(society.siren)) {
@@ -148,11 +177,34 @@ export default function UploadFileDsn() {
                     addMutual(mutual)
                 }
             }
+            const mutualEmployees = parser.mutualEmployee
+            for (const mutualEmployee of mutualEmployees) {
+                if (!mutualEmployeeSet.has(mutualEmployee.idTechAffiliationMutual)) {
+                    mutualEmployeeSet.add(mutualEmployee.idTechAffiliationMutual)
+                    addMutualEmployee(mutualEmployee)
+                }
+            }
+            const contributions = parser.contribution
+            for (const contribution of contributions) {
+                if (!contributionSet.has(contribution.idContribution)) {
+                    contributionSet.add(contribution.idContribution)
+                    addContribution(contribution)
+                }
+                addContribution(contribution)
+            }
+            const banks = parser.bank
+            for (const bank of banks) {
+                if (!bankSet.has(bank.contributionFundIBAN)) {
+                    bankSet.add(bank.contributionFundIBAN)
+                    addBank(bank)
+                }
+            }
         }
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+
         setLoading(true)
         toast(`Début chargement des données`, {
             description: new Date().toLocaleDateString(),
@@ -198,9 +250,6 @@ export default function UploadFileDsn() {
             },
         })
         router.push("/extraction")
-
-
-
         setLoading(false);
 
     }

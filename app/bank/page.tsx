@@ -14,11 +14,11 @@ import { DataTable } from "@/components/layout/datatable";
 import Link from "next/link";
 import { Container, ContainerBreadCrumb, ContainerCard } from "@/components/layout/containter";
 export default function Page() {
-    let employeesList = []
+    const bankList = []
     const context = useContext(DsnContext);
     if (context !== null) {
-        const { employees } = context;
-        employeesList.push(...employees)
+        const { banks } = context;
+        bankList.push(...banks)
     }
     return (
         <Container>
@@ -30,14 +30,14 @@ export default function Page() {
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <Link href="/employee">Salariés</Link>
+                            <Link href="/bank">Banques</Link>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                     </BreadcrumbList>
                 </Breadcrumb>
             </ContainerBreadCrumb>
             <ContainerCard>
-                <DataTable columns={columns} data={employeesList} inputSearch="lastname" inputSearchPlaceholder="Chercher par nom" />
+                <DataTable columns={columns} data={bankList} inputSearch="contributionFundIBAN" inputSearchPlaceholder="Chercher par iban" />
             </ContainerCard>
         </Container>
 

@@ -1852,6 +1852,12 @@ l’hypothèse d’un poste à temps complet`,
     },
     {
         collection: 'MutualEmployee',
+        field: 'numSS',
+        name: 'Numéro de sécurité sociale',
+        dsnStructure: 'S21.G00.30.001'
+    },
+    {
+        collection: 'MutualEmployee',
         field: 'option',
         name: 'Code option retenue par le salarié',
         dsnStructure: 'S21.G00.70.004'
@@ -1975,6 +1981,12 @@ l’hypothèse d’un poste à temps complet`,
         field: 'crmBaseSubject',
         name: `Identifiant du CRM à l'origine de la régularisation`,
         dsnStructure: 'S21.G00.79.005'
+    },
+    {
+        collection: 'Contribution',
+        field: 'numSS',
+        name: 'Numéro de sécurité sociale',
+        dsnStructure: 'S21.G00.30.001'
     },
     {
         collection: 'Contribution',

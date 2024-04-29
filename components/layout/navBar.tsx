@@ -23,6 +23,8 @@ import {
     User,
     Pickaxe,
     Scale,
+    HeartPulse,
+    Landmark,
 
 } from "lucide-react"
 export default function NavBar() {
@@ -65,6 +67,22 @@ export default function NavBar() {
                                 ><Building2 /></Link>
                             </TooltipTrigger>
                             <TooltipContent side="right">Etablissement</TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Link href={`/bank`}
+                                    className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
+                                ><Landmark /></Link>
+                            </TooltipTrigger>
+                            <TooltipContent side="right">Banque</TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Link href={`/mutual`}
+                                    className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
+                                ><HeartPulse /></Link>
+                            </TooltipTrigger>
+                            <TooltipContent side="right">Mutuelle</TooltipContent>
                         </Tooltip>
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -143,11 +161,25 @@ export default function NavBar() {
                             Extraction
                         </Link>
                         <Link
-                            href="#"
+                            href="/establishment"
                             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                         >
                             <Building2 className="size-5" />
                             Etablissement
+                        </Link>
+                        <Link
+                            href="/bank"
+                            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                        >
+                            <Landmark className="size-5" />
+                            Banque
+                        </Link>
+                        <Link
+                            href="/mutual"
+                            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                        >
+                            <HeartPulse className="size-5" />
+                            Mutuelle
                         </Link>
                         <Link
                             href="/employee"

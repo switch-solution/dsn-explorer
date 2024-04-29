@@ -148,6 +148,22 @@ export type PayroolObject = {
     increaseRate: string
 }
 
+export type MutualEmployeeObject = {
+    employeeId: string,
+    numSS: string,
+    option: string,
+    pop: string,
+    children: string,
+    assign: string,
+    numberAssign: string,
+    otherAssign: string,
+    idTechAffiliation: string,
+    idTech: string,
+    date: string,
+    idTechAffiliationMutual: string,
+    startDateMutualEmployee: string,
+    endDateMutualEmployee: string
+}
 
 export type MutualObject = {
     contractId?: string,
@@ -238,4 +254,24 @@ export type WorkStoppingObject = {
     date: string,
     siret: string
 }
+
+export type ContributionObject = {
+    employeeId: string,
+    numSS: string,
+    idContribution: string,
+    ops: string,
+    baseContribution: string,
+    amountContribution: string,
+    idInsee?: string,
+    crmContribution?: string,
+    rateContribution?: string,
+    date: string
+}
+
+export type BankObject = {
+    contributionFundBIC: string,
+    contributionFundIBAN: string,
+}
+
+
 

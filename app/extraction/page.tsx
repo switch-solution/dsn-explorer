@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { DataTable } from "@/components/layout/datatable";
 import Link from "next/link";
-import { EstablishmentObject, EmployeeObject, WorkContractObject, RateAtObject, PayroolObject, SocietyObject, MutualObject, BonusObject, WorkStoppingObject } from "@/src/type/type";
+import { EstablishmentObject, EmployeeObject, WorkContractObject, RateAtObject, PayroolObject, SocietyObject, MutualObject, BonusObject, WorkStoppingObject, BankObject } from "@fibre44/dsn-parser/lib/utils/type";
 import { Container, ContainerBreadCrumb, ContainerCard } from "@/components/layout/containter";
 export default function Page() {
     const establishmentsList: EstablishmentObject[] = []
@@ -23,10 +23,11 @@ export default function Page() {
     const societyList: SocietyObject[] = []
     const mutualList: MutualObject[] = []
     const bonusList: BonusObject[] = []
+    const banksList: BankObject[] = []
     const workStoppingList: WorkStoppingObject[] = []
     const context = useContext(DsnContext);
     if (context !== null) {
-        const { establishments, employees, workContracts, ratesAt, payrools, societys, mutuals, bonus, workStoppings } = context;
+        const { establishments, employees, workContracts, ratesAt, payrools, societys, mutuals, bonus, workStoppings, banks } = context;
         establishmentsList.push(...establishments)
         employeesList.push(...employees)
         workContractsList.push(...workContracts)
@@ -36,6 +37,7 @@ export default function Page() {
         mutualList.push(...mutuals)
         bonusList.push(...bonus)
         workStoppingList.push(...workStoppings)
+        banksList.push(...banks)
     }
     const datas = [
         {
@@ -47,6 +49,11 @@ export default function Page() {
             label: "Etablissements",
             count: establishmentsList.length,
             data: establishmentsList
+        },
+        {
+            label: "Banques",
+            count: banksList.length,
+            data: banksList
         },
         {
             label: "Salariés",
@@ -82,6 +89,11 @@ export default function Page() {
             label: "Arrêt de travail",
             count: workStoppingList.length,
             data: workStoppingList
+        },
+        {
+            label: "Mutuelle prévoyance",
+            count: mutualList.length,
+            data: mutualList
         }
     ]
     return (
@@ -101,7 +113,7 @@ export default function Page() {
                 </Breadcrumb>
             </ContainerBreadCrumb>
             <ContainerCard>
-                <DataTable columns={columns} data={datas} inputSearch="nic" inputSearchPlaceholder="Chercher par NIC" />
+                <DataTable columns={columns} data={datas} inputSearch="label" inputSearchPlaceholder="Chercher par libellé" />
             </ContainerCard>
         </Container>
 

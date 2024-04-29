@@ -2,7 +2,7 @@
 import { useContext } from "react"
 import { CardWithContent } from "@/components/layout/card";
 import { ContainerCard } from "@/components/layout/containter";
-import { EstablishmentObject, RateAtObject } from "@/src/type/type";
+import { EstablishmentObject, RateAtObject } from "@fibre44/dsn-parser/lib/utils/type";
 import { DsnContext } from "@/src/context/dsn.context";
 import {
     Table,
