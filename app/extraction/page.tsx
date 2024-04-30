@@ -12,8 +12,10 @@ import {
 } from "@/components/ui/breadcrumb"
 import { DataTable } from "@/components/layout/datatable";
 import Link from "next/link";
+import { extractionsList } from "@fibre44/dsn-parser/lib/utils/extraction"
 import { EstablishmentObject, EmployeeObject, WorkContractObject, RateAtObject, PayroolObject, SocietyObject, MutualObject, BonusObject, WorkStoppingObject, BankObject } from "@fibre44/dsn-parser/lib/utils/type";
 import { Container, ContainerBreadCrumb, ContainerCard } from "@/components/layout/containter";
+
 export default function Page() {
     const establishmentsList: EstablishmentObject[] = []
     const employeesList: EmployeeObject[] = []
@@ -43,57 +45,158 @@ export default function Page() {
         {
             label: "Sociétés",
             count: societyList.length,
-            data: societyList
+            data: societyList.map((society) => {
+                const row: { [key: string]: any } = {}
+                Object.keys(society).forEach((key) => {
+                    const label = extractionsList.find((extraction) => extraction.field === key)?.name
+                    if (label) {
+                        row[label] = society[key as keyof SocietyObject]
+                    }
+                })
+                return row
+            })
         },
         {
             label: "Etablissements",
             count: establishmentsList.length,
-            data: establishmentsList
+            data: establishmentsList.map((establishment) => {
+                const row: { [key: string]: any } = {}
+                Object.keys(establishment).forEach((key) => {
+                    const label = extractionsList.find((extraction) => extraction.field === key)?.name
+                    if (label) {
+                        row[label] = establishment[key as keyof EstablishmentObject]
+                    }
+                })
+                return row
+            })
         },
         {
             label: "Banques",
             count: banksList.length,
-            data: banksList
+            data: banksList.map((bank) => {
+                const row: { [key: string]: any } = {}
+                Object.keys(bank).forEach((key) => {
+                    const label = extractionsList.find((extraction) => extraction.field === key)?.name
+                    if (label) {
+                        row[label] = bank[key as keyof BankObject]
+                    }
+                })
+                return row
+            })
         },
         {
             label: "Salariés",
             count: employeesList.length,
-            data: employeesList
+            data: employeesList.map((employee) => {
+                const row: { [key: string]: any } = {}
+                Object.keys(employee).forEach((key) => {
+                    const label = extractionsList.find((extraction) => extraction.field === key)?.name
+                    if (label) {
+                        row[label] = employee[key as keyof EmployeeObject]
+                    }
+                })
+                return row
+            })
         },
         {
             label: "Contrats de travail",
             count: workContractsList.length,
-            data: workContractsList
+            data: workContractsList.map((workContract) => {
+                const row: { [key: string]: any } = {}
+                Object.keys(workContract).forEach((key) => {
+                    const label = extractionsList.find((extraction) => extraction.field === key)?.name
+                    if (label) {
+                        row[label] = workContract[key as keyof WorkContractObject]
+                    }
+                })
+                return row
+            })
         },
         {
             label: "Taux AT",
             count: rateAtList.length,
-            data: rateAtList
+            data: rateAtList.map((rateAt) => {
+                const row: { [key: string]: any } = {}
+                Object.keys(rateAt).forEach((key) => {
+                    const label = extractionsList.find((extraction) => extraction.field === key)?.name
+                    if (label) {
+                        row[label] = rateAt[key as keyof RateAtObject]
+                    }
+                })
+                return row
+            })
         },
         {
             label: "Bulletin de paie",
             count: payroolList.length,
-            data: payroolList
+            data: payroolList.map((payrool) => {
+                const row: { [key: string]: any } = {}
+                Object.keys(payrool).forEach((key) => {
+                    const label = extractionsList.find((extraction) => extraction.field === key)?.name
+                    if (label) {
+                        row[label] = payrool[key as keyof PayroolObject]
+                    }
+                })
+                return row
+            })
         },
         {
             label: "Primes",
             count: bonusList.length,
-            data: bonusList
+            data: bonusList.map((bonus) => {
+                const row: { [key: string]: any } = {}
+                Object.keys(bonus).forEach((key) => {
+                    const label = extractionsList.find((extraction) => extraction.field === key)?.name
+                    if (label) {
+                        row[label] = bonus[key as keyof BonusObject]
+                    }
+                })
+                return row
+            })
         },
         {
             label: "Contrat prévoyance/mutuelle",
             count: mutualList.length,
-            data: mutualList
+            data: mutualList.map((mutual) => {
+                const row: { [key: string]: any } = {}
+                Object.keys(mutual).forEach((key) => {
+                    const label = extractionsList.find((extraction) => extraction.field === key)?.name
+                    if (label) {
+                        row[label] = mutual[key as keyof MutualObject]
+                    }
+                })
+                return row
+
+            })
         },
         {
             label: "Arrêt de travail",
             count: workStoppingList.length,
-            data: workStoppingList
+            data: workStoppingList.map((workStopping) => {
+                const row: { [key: string]: any } = {}
+                Object.keys(workStopping).forEach((key) => {
+                    const label = extractionsList.find((extraction) => extraction.field === key)?.name
+                    if (label) {
+                        row[label] = workStopping[key as keyof WorkStoppingObject]
+                    }
+                })
+                return row
+            })
         },
         {
             label: "Mutuelle prévoyance",
             count: mutualList.length,
-            data: mutualList
+            data: mutualList.map((mutual) => {
+                const row: { [key: string]: any } = {}
+                Object.keys(mutual).forEach((key) => {
+                    const label = extractionsList.find((extraction) => extraction.field === key)?.name
+                    if (label) {
+                        row[label] = mutual[key as keyof MutualObject]
+                    }
+                })
+                return row
+
+            })
         }
     ]
     return (
