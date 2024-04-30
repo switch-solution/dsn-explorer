@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Project Installation and Setup
 
-## Getting Started
+DSN Explorer is a web application that allows you to extract data from files in the format of the "Déclaration Sociale Nominative" (DSN) into Excel format and read the content within a web interface.
 
-First, run the development server:
+## Prerequisites
+Before you begin, make sure you have the following installed on your machine:
+- Node.js: Next.js requires Node.js. You can download and install it from https://nodejs.org/.
+- npm: npm is the package manager for Node.js and is installed with Node.js. You can check that you have it installed by running npm -v in your terminal.
+- Docker: If you plan to use Docker for running the project, make sure you have Docker installed. You can download and install it from https://www.docker.com/.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Installation
+1. Clone the repository to your local machine using the git clone command. 
+
+``` bash
+    git clone https://github.com/switch-solution/dsn-explorer
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Navigate into the project directory:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+``` bash
+    cd your-repo
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+3. Install the project dependencies:
 
-## Learn More
+``` bash
+    npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Running the Project
+### Using Node.js
+Once you have installed the dependencies, you can run the project using the npm run dev command. This will start the Next.js development server:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+``` bash
+    npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Open http://localhost:3000 in your browser to see the result.
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Using Docker
+If you prefer to use Docker, you can build a Docker image and run a container from it. Here's how:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```bash
+docker pull ndenis117/dsn-explorer:latest
+```
