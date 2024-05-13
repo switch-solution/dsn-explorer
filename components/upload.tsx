@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation";
 import type { Dsn } from "@/src/context/dsn.context";
 import { DsnParser } from "@fibre44/dsn-parser";
-import type { EmployeeObject, EstablishmentObject, RateAtObject, WorkContractObject, ContributionObject, BankObject, WorkStoppingObject, PayroolObject, SocietyObject, MutualObject, MutualEmployeeObject } from "@fibre44/dsn-parser/lib/utils/type";
+import type { EmployeeObject, EstablishmentObject, JobObject, IdccObject, RateAtObject, WorkContractObject, ContributionObject, BankObject, WorkStoppingObject, PayroolObject, SocietyObject, MutualObject, MutualEmployeeObject } from "@fibre44/dsn-parser/lib/utils/type";
 
 export default function UploadFileDsn() {
 
@@ -25,8 +25,12 @@ export default function UploadFileDsn() {
     const mutualEmployeeSet = new Set<string>()
     const contributionSet = new Set<string>()
     const bankSet = new Set<string>()
+    const jobSet = new Set<string>()
+    const idccSet = new Set<string>()
     let addFile: (file: Dsn) => void;
     let addEstablishment: (establishment: EstablishmentObject) => void;
+    let addJobLabel: (job: JobObject) => void;
+    let addIdccLabel: (idcc: IdccObject) => void;
     let addEmployee: (employee: EmployeeObject) => void;
     let addRateAt: (rateAt: RateAtObject) => void;
     let addWorkContract: (workContract: WorkContractObject) => void;
@@ -35,6 +39,7 @@ export default function UploadFileDsn() {
     let addSociety: (society: SocietyObject) => void;
     let addMutual: (mutual: MutualObject) => void;
     let addMutualEmployee: (mutualEmployee: MutualEmployeeObject) => void;
+    let addIdcc: (idcc: IdccObject) => void;
     let removeAll: () => void;
     let addContribution: (contribution: ContributionObject) => void;
     let addBank: (bank: BankObject) => void;
@@ -54,9 +59,12 @@ export default function UploadFileDsn() {
             mutualEmployees,
             contribution,
             banks,
+            jobs,
             addDsn,
             addEstablishments,
             addEmployees,
+            addIdcc,
+            addJobs,
             addRatesAt,
             addWorkContracts,
             addWorkStoppings,
@@ -84,6 +92,8 @@ export default function UploadFileDsn() {
         addSociety = addSocietys
         addMutual = addMutuals
         removeAll = removeDsn
+        addJobLabel = addJobs
+        addIdccLabel = addIdcc
         addMutualEmployee = addMutualsEmployees
         addContribution = addContributions
         addBank = addBanks
@@ -131,6 +141,20 @@ export default function UploadFileDsn() {
             if (!establishmentSet.has(establishment.nic)) {
                 establishmentSet.add(establishment.nic)
                 addEstablishment(establishment)
+            }
+            const jobs = parser.job
+            for (const job of jobs) {
+                if (!jobSet.has(job.label)) {
+                    jobSet.add(job.label)
+                    addJobLabel(job)
+                }
+            }
+            const idcc = parser.idcc
+            for (const idccObject of idcc) {
+                if (!idccSet.has(idccObject.idcc)) {
+                    idccSet.add(idccObject.idcc)
+                    addIdccLabel(idccObject)
+                }
             }
             const employees = parser.employees
             for (const employee of employees) {

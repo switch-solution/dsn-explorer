@@ -13,7 +13,7 @@ import {
 import { DataTable } from "@/components/layout/datatable";
 import Link from "next/link";
 import { extractionsList } from "@fibre44/dsn-parser/lib/utils/extraction"
-import { EstablishmentObject, EmployeeObject, WorkContractObject, RateAtObject, PayroolObject, SocietyObject, MutualObject, BonusObject, WorkStoppingObject, BankObject } from "@fibre44/dsn-parser/lib/utils/type";
+import { EstablishmentObject, EmployeeObject, WorkContractObject, RateAtObject, PayroolObject, SocietyObject, MutualObject, BonusObject, WorkStoppingObject, BankObject, JobObject, IdccObject } from "@fibre44/dsn-parser/lib/utils/type";
 import { Container, ContainerBreadCrumb, ContainerCard } from "@/components/layout/containter";
 
 export default function Page() {
@@ -27,9 +27,11 @@ export default function Page() {
     const bonusList: BonusObject[] = []
     const banksList: BankObject[] = []
     const workStoppingList: WorkStoppingObject[] = []
+    const jobList: JobObject[] = []
+    const idccList: IdccObject[] = []
     const context = useContext(DsnContext);
     if (context !== null) {
-        const { establishments, employees, workContracts, ratesAt, payrools, societys, mutuals, bonus, workStoppings, banks } = context;
+        const { establishments, employees, workContracts, ratesAt, payrools, societys, mutuals, bonus, workStoppings, banks, jobs, idcc } = context;
         establishmentsList.push(...establishments)
         employeesList.push(...employees)
         workContractsList.push(...workContracts)
@@ -40,6 +42,8 @@ export default function Page() {
         bonusList.push(...bonus)
         workStoppingList.push(...workStoppings)
         banksList.push(...banks)
+        jobList.push(...jobs)
+        idccList.push(...idcc)
     }
     const datas = [
         {
@@ -51,6 +55,34 @@ export default function Page() {
                     const label = extractionsList.find((extraction) => extraction.field === key)?.name
                     if (label) {
                         row[label] = society[key as keyof SocietyObject]
+                    }
+                })
+                return row
+            })
+        },
+        {
+            label: "Emplois",
+            count: jobList.length,
+            data: jobList.map((job) => {
+                const row: { [key: string]: any } = {}
+                Object.keys(job).forEach((key) => {
+                    const label = extractionsList.find((extraction) => extraction.field === key)?.name
+                    if (label) {
+                        row[label] = job[key as keyof JobObject]
+                    }
+                })
+                return row
+            })
+        },
+        {
+            label: "IDCC",
+            count: idccList.length,
+            data: idccList.map((idcc) => {
+                const row: { [key: string]: any } = {}
+                Object.keys(idcc).forEach((key) => {
+                    const label = extractionsList.find((extraction) => extraction.field === key)?.name
+                    if (label) {
+                        row[label] = idcc[key as keyof IdccObject]
                     }
                 })
                 return row

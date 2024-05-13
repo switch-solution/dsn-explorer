@@ -9,7 +9,8 @@ export type Dsn = {
     }[],
 
 }
-import type { EmployeeObject, EstablishmentObject, RateAtObject, BonusObject, PayroolObject, ContributionObject, WorkContractObject, SocietyObject, WorkStoppingObject, MutualObject, MutualEmployeeObject, BankObject } from "@fibre44/dsn-parser/lib/utils/type";
+import type { EmployeeObject, EstablishmentObject, RateAtObject, BonusObject, JobObject, IdccObject, PayroolObject, ContributionObject, WorkContractObject, SocietyObject, WorkStoppingObject, MutualObject, MutualEmployeeObject, BankObject } from "@fibre44/dsn-parser/lib/utils/type";
+import { set } from 'zod';
 type DsnContextType = {
     dsn: Dsn[];
     establishments: EstablishmentObject[],
@@ -24,6 +25,8 @@ type DsnContextType = {
     mutualEmployees: MutualEmployeeObject[],
     contribution: ContributionObject[],
     banks: BankObject[],
+    jobs: JobObject[],
+    idcc: IdccObject[],
     addDsn: (file: Dsn) => void;
     addEmployees: (employee: EmployeeObject) => void,
     addEstablishments: (establishment: EstablishmentObject) => void
@@ -37,6 +40,8 @@ type DsnContextType = {
     addMutualsEmployees: (mutualEmployee: MutualEmployeeObject) => void
     addContributions: (contribution: ContributionObject) => void
     addBanks: (bank: BankObject) => void
+    addJobs: (job: JobObject) => void
+    addIdcc: (idcc: IdccObject) => void
     removeDsn: () => void
 };
 
@@ -56,8 +61,17 @@ export function DsnContextProvider({ children }: { children: React.ReactNode }) 
     const [mutualEmployees, setMutualEmployees] = useState<MutualEmployeeObject[]>([])
     const [contribution, setContribution] = useState<ContributionObject[]>([])
     const [banks, setBanks] = useState<BankObject[]>([])
+    const [jobs, setJobs] = useState<JobObject[]>([])
+    const [idcc, setIdcc] = useState<IdccObject[]>([])
+
     const addDsn = (file: Dsn) => {
         setDsn(prevDsn => [...prevDsn, file]);
+    }
+    const addJobs = (job: JobObject) => {
+        setJobs(prevJob => [...prevJob, job]);
+    }
+    const addIdcc = (idcc: IdccObject) => {
+        setIdcc(prevIdcc => [...prevIdcc, idcc]);
     }
     const addEmployees = (employee: EmployeeObject) => {
         setEmployees(prevEmployee => [...prevEmployee, employee]);
@@ -109,6 +123,8 @@ export function DsnContextProvider({ children }: { children: React.ReactNode }) 
         setMutualEmployees([]);
         setContribution([]);
         setBanks([]);
+        setJobs([]);
+        setIdcc([]);
     }
     return (
         <DsnContext.Provider value={{
@@ -125,6 +141,8 @@ export function DsnContextProvider({ children }: { children: React.ReactNode }) 
             mutualEmployees,
             contribution,
             banks,
+            jobs,
+            idcc,
             addDsn,
             addEmployees,
             addEstablishments,
@@ -138,7 +156,9 @@ export function DsnContextProvider({ children }: { children: React.ReactNode }) 
             addMutualsEmployees,
             removeDsn,
             addContributions,
-            addBanks
+            addBanks,
+            addIdcc,
+            addJobs
         }}>
             {children}
         </DsnContext.Provider>
