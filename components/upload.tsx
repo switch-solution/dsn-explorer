@@ -144,8 +144,8 @@ export default function UploadFileDsn() {
             }
             const jobs = parser.job
             for (const job of jobs) {
-                if (!jobSet.has(job.label)) {
-                    jobSet.add(job.label)
+                if (!jobSet.has(job.employmentLabel)) {
+                    jobSet.add(job.employmentLabel)
                     addJobLabel(job)
                 }
             }
